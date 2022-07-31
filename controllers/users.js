@@ -11,9 +11,8 @@ const getUser = (req, res) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ 'message': 'Запрашиваемый пользователь не найден' });
+        return res.status(404).send({ 'message': 'Пользователь по указанному id не найден' });
       }
-
       res.status(200).send(user)
     })
     .catch((err) => res.status(500).send({ 'message': 'Произошла ошибка' }))
@@ -27,9 +26,8 @@ const createUser = (req, res) => {
     })
     .catch(err => {
       if (err.name === 'SomeErrorName') {
-        return res.status(400).send({ 'message': 'Некорректные данные' })
+        return res.status(400).send({ 'message': 'Переданы некорректные данные при создании пользователя' })
       }
-
       res.status(500).send({ 'message': 'Произошла ошибка' })
     });
 }; // создает пользователя
@@ -38,14 +36,14 @@ const updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { $set: { name: req.body.name, about: req.body.about } })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ 'message': 'Пользователь не найден' });
+        return res.status(404).send({ 'message': 'Пользователь с указанным id не найден' });
       }
 
       res.send({ data: user })
     })
     .catch(err => {
       if (err.name === 'SomeErrorName') {
-        return res.status(400).send({ 'message': 'Некорректные данные' })
+        return res.status(400).send({ 'message': 'Переданы некорректные данные при обновлении профиля' })
       }
       res.status(500).send({ 'message': 'Произошла ошибка' })
     })
@@ -55,14 +53,13 @@ const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { $set: { avatar: req.body.avatar } })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ 'message': 'Пользователь не найден' });
+        return res.status(404).send({ 'message': 'Пользователь с указанным id не найден' });
       }
-
       res.send({ data: user })
     })
     .catch(err => {
       if (err.name === 'SomeErrorName') {
-        return res.status(400).send({ 'message': 'Некорректные данные' })
+        return res.status(400).send({ 'message': 'Переданы некорректные данные при обновлении аватара' })
       }
       res.status(500).send({ 'message': 'Произошла ошибка' })
     });

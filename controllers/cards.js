@@ -13,7 +13,7 @@ const createCard = (req, res) => {
     })
     .catch(err => {
       if (err.name === 'SomeErrorName') {
-        return res.status(400).send({ 'message': 'Некорректные данные' })
+        return res.status(400).send({ 'message': 'Переданы некорректные данные при создании карточки' })
       }
       res.status(500).send({ 'message': 'Произошла ошибка' })
     });
@@ -24,12 +24,10 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ 'message': 'Карточка не найдена' });
+        return res.status(404).send({ 'message': 'Карточка с указанным id не найдена' });
       }
-
       return res.send({ data: card });
     })
-    .catch(() => res.status(500).send({ 'message': 'Произошла ошибка' }));
 }; // удаляет карточку по идентификатору
 
 const likeCard = (req, res) => {
@@ -40,17 +38,17 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ 'message': 'Карточка не найдена' });
+        return res.status(404).send({ 'message': 'Передан несуществующий id карточки' });
       }
 
       return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'SomeErrorName') {
-        return res.status(400).send({ 'message': 'Некорректные данные' });
+        return res.status(400).send({ 'message': ' Переданы некорректные данные для постановки/снятии лайка' });
       }
 
-      return res.status(500).send({ message: 'Произошла ошибка' });
+      return res.status(500).send({ 'message': 'Произошла ошибка' });
     });
 }; // поставить лайк карточке
 
