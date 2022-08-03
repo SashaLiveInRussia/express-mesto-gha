@@ -1,4 +1,4 @@
-const ERRORS = require('../errors');
+const ERRORS = require('../errors/errors');
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -47,9 +47,9 @@ const updateUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        return res.status(ERRORS.ERROR_404).send({ message: 'Переданы некорректные данные при обновлении профиля' });
       }
-      return res.status(500).send({ message: 'Произошла ошибка' });
+      return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
     });
 }; //  обновляет профиль
 
