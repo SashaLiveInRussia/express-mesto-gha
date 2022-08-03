@@ -1,4 +1,4 @@
-const ERRORS = require('../errors');
+const ERRORS = require('../errors/errors');
 const Card = require('../models/card');
 
 const getCards = (req, res) => {
