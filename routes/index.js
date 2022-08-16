@@ -7,7 +7,7 @@ const { createUser, login } = require('../controllers/users');
 const { isAutorised } = require('../middlewares/auth');
 
 const passswordValidation = Joi.string().required().min(8);
-const emailValidation = Joi.string().required();
+const emailValidation = Joi.string().required().email();
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -20,6 +20,9 @@ router.post('/signup', celebrate({
   body: Joi.object().keys({
     email: emailValidation,
     password: passswordValidation,
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required().pattern(new RegExp('(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})')),
   })
 }), createUser);
 

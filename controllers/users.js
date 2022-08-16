@@ -45,12 +45,10 @@ const createUser = (req, res) => {
       }
 
       return bcrypt.hash(password, 10).then((hash) => {
-        User.create({ email, password: hash })
-          .then((userData) => {
-            delete userData.password;
-            res.status(201).send(userData)
-          })
-          .catch(() => res.status(500).send({ message: 'Internal Error' }));
+        const userData = new User({ email, password: hash });
+        const userJson = userData.toJSON();
+        delete userJson.password
+        res.status(201).json(userJson);
       });
     })
 
