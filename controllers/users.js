@@ -8,6 +8,7 @@ const { getJwtToken } = require('../middlewares/auth');
 const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
   .catch(() => res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные' }));
+// возвращает пользователей
 
 const getUser = (req, res) => {
   const { userId } = req.params;
@@ -57,36 +58,23 @@ const createUser = (req, res) => {
 }; // создает пользователя
 
 const updateUser = (req, res) => {
-  User.findById(req.user.id)
+  User.findByIdAndUpdate(req.user.id, { $set: { name: req.body.name, about: req.body.about } }, { new: true })
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь с указанным id не найден' });
       }
-
-      user.name = req.body.name;
-      user.about = req.body.about;
-
-      user.validate()
-        .then(() => user.save())
-        .then(() => res.send({ data: user }))
-        .catch(err => {
-          if (err.name === 'ValidationError') {
-            return res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
-          }
-
-          return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
-        })
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERRORS.ERROR_404).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        return res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
       }
       return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
     });
 }; //  обновляет профиль
 
 const updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user.id, { $set: { avatar: req.body.avatar } })
+  User.findByIdAndUpdate(req.user.id, { $set: { avatar: req.body.avatar } }, { new: true })
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь с указанным id не найден' });
