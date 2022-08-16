@@ -21,6 +21,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: 'На сервере произошла ошибка' });
+});
+
 app.listen(PORT, () => {
   console.log('Сервер запущен');
 });
