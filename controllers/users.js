@@ -10,13 +10,13 @@ const getUsers = (req, res) => User.find({})
   .catch(() => res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные' }));
 
 const getUser = (req, res) => {
-  const { id } = req.user;
-  User.findById(id)
+  const { userId } = req.params;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь по указанному id не найден' });
       }
-      return res.status(200).send(user);
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -91,7 +91,7 @@ const updateUserAvatar = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) { 
+  if (!email || !password) {
     return res.status(ERRORS.ERROR_400).send({ message: 'Email или пароль не передан' });
   }
 
@@ -117,6 +117,24 @@ const login = (req, res) => {
     .catch(() => res.status(ERRORS.ERROR_500).send({ message: 'Internal Error' }));
 };
 
+const getUserInfo = (req, res) => {
+  const { id } = req.user;
+  
+  User.findById(id)
+    .then((user) => {
+      if (!user) {
+        return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь по указанному id не найден' });
+      }
+      return res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные' });
+      }
+      return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
+    });
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -124,4 +142,5 @@ module.exports = {
   updateUser,
   updateUserAvatar,
   login,
+  getUserInfo,
 };
