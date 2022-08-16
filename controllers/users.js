@@ -57,7 +57,7 @@ const createUser = (req, res) => {
 }; // создает пользователя
 
 const updateUser = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { $set: { name: req.body.name, about: req.body.about } })
+  User.findByIdAndUpdate(req.user.id, { $set: { name: req.body.name, about: req.body.about } })
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь с указанным id не найден' });
@@ -73,7 +73,7 @@ const updateUser = (req, res) => {
 }; //  обновляет профиль
 
 const updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { $set: { avatar: req.body.avatar } })
+  User.findByIdAndUpdate(req.user.id, { $set: { avatar: req.body.avatar } })
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь с указанным id не найден' });
@@ -119,7 +119,7 @@ const login = (req, res) => {
 
 const getUserInfo = (req, res) => {
   const { id } = req.user;
-  
+
   User.findById(id)
     .then((user) => {
       if (!user) {
