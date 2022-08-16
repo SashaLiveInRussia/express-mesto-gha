@@ -45,14 +45,16 @@ const createUser = (req, res) => {
       }
 
       return bcrypt.hash(password, 10).then((hash) => {
-        const userData = new User({ email, password: hash });
-        const userJson = userData.toJSON();
-        delete userJson.password
-        res.status(201).json(userJson);
+        User.create({ ...req.body, password: hash })
+          .then(userData => {
+            const userJson = userData.toJSON();
+            delete userJson.password
+            res.status(201).json(userJson);
+          })
       });
     })
 
-    .catch(() => res.status(500).send({ message: 'Internal Error' }));
+    .catch((e) => res.status(500).send({ message: e.message }));
 }; // создает пользователя
 
 const updateUser = (req, res) => {
