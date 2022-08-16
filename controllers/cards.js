@@ -21,7 +21,7 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findOneAndRemove({ _id: req.params.cardId })
     .then((card) => {
-      if (card && card.owner !== req.user.id) {
+      if (card && card.owner.toString() !== req.user.id) {
         return res.status(403).send({ message: 'Не наша карточка' });
       }
       if (!card) {
@@ -33,6 +33,7 @@ const deleteCard = (req, res) => {
       if (err.name === 'ValidationError') {
         return res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные при создании карточки' });
       }
+      console.log(err);
       return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
     });
 }; // удаляет карточку по идентификатору
