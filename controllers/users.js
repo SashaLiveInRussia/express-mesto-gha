@@ -1,5 +1,6 @@
 const ERRORS = require('../errors/errors');
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -69,10 +70,33 @@ const updateUserAvatar = (req, res) => {
     });
 }; //  обновляет аватар
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({ message: 'Email или пароль не передан' });
+  };
+
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return res.status(409).send({ message: 'Такой пользователь уже существует' });
+      }
+
+      User.create({ email, password })
+        .then((user) => {
+          res.status(201).send(user);
+        })
+        .catch(() => res.status(500).send({ message: 'Internal Error' }));
+    })
+    .catch(() => res.status(500).send({ message: 'Internal Error' }));
+};
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   updateUserAvatar,
+  login,
 };
