@@ -8,7 +8,7 @@ const getCards = (req, res) => {
 }; // возвращает все карточки
 
 const createCard = (req, res) => {
-  Card.create({ name: req.body.name, link: req.body.link, owner: req.user._id })
+  Card.create({ name: req.body.name, link: req.body.link, owner: req.user.id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -19,7 +19,7 @@ const createCard = (req, res) => {
 }; // создаёт карточку
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findOneAndRemove({ _id: req.params.cardId, owner: req.user.id })
     .then((card) => {
       if (!card) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Карточка с указанным id не найдена' });
@@ -37,7 +37,7 @@ const deleteCard = (req, res) => {
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes: req.user.id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
     .then((card) => {
@@ -59,7 +59,7 @@ const likeCard = (req, res) => {
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user.id } }, // убрать _id из массива
     { new: true },
   )
     .then((card) => {

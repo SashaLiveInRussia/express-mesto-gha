@@ -1,16 +1,17 @@
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 const ERRORS = require('../errors/errors');
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch(() => res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' }));
-};// возвращает всех пользователей
+const { getJwtToken } = require('../middlewares/auth');
+
+const getUsers = (req, res) => User.find({})
+  .then((users) => res.status(200).send(users))
+  .catch(() => res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные' }));
 
 const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
+  const { id } = req.user;
+  User.findById(id)
     .then((user) => {
       if (!user) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Пользователь по указанному id не найден' });
@@ -26,16 +27,30 @@ const getUser = (req, res) => {
 };// возвращает пользователя по id
 
 const createUser = (req, res) => {
-  User.create({ ...req.body })
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(ERRORS.ERROR_400).send({ message: 'Email или пароль не передан' });
+  }
+
+  if (!validator.isEmail(email)) {
+    return res.status(ERRORS.ERROR_400).send({ message: 'Email некорректен' });
+  }
+
+  return User.findOne({ email })
     .then((user) => {
-      res.status(200).send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(ERRORS.ERROR_400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      if (user) {
+        return res.status(409).send({ message: 'Такой пользователь уже существует' });
       }
-      return res.status(ERRORS.ERROR_500).send({ message: 'Произошла ошибка' });
-    });
+
+      return bcrypt.hash(password, 10).then((hash) => {
+        User.create({ email, password: hash })
+          .then((userData) => res.status(201).send(userData))
+          .catch(() => res.status(500).send({ message: 'Internal Error' }));
+      });
+    })
+
+    .catch(() => res.status(500).send({ message: 'Internal Error' }));
 }; // создает пользователя
 
 const updateUser = (req, res) => {
@@ -74,22 +89,25 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send({ message: 'Email или пароль не передан' });
-  };
+    return res.status(ERRORS.ERROR_400).send({ message: 'Email или пароль не передан' });
+  }
 
-  User.findOne({ email })
+  return User.findOne({ email }).select('+password')
     .then((user) => {
-      if (user) {
-        return res.status(409).send({ message: 'Такой пользователь уже существует' });
+      if (!user) {
+        return res.status(403).send({ message: 'Такого пользователя не существует' });
       }
 
-      User.create({ email, password })
-        .then((user) => {
-          res.status(201).send(user);
-        })
-        .catch(() => res.status(500).send({ message: 'Internal Error' }));
+      return bcrypt.compare(password, user.password, (err, isValidPassword) => {
+        if (!isValidPassword) {
+          return res.status(401).send({ message: 'Неправильный email или пароль' });
+        }
+
+        const token = getJwtToken(user.id);
+        return res.status(200).send({ token });
+      });
     })
-    .catch(() => res.status(500).send({ message: 'Internal Error' }));
+    .catch(() => res.status(ERRORS.ERROR_500).send({ message: 'Internal Error' }));
 };
 
 module.exports = {

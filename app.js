@@ -10,22 +10,13 @@ const logger = (req, res, next) => {
   next();
 };
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62e650c2c1813a3fc8584c2f',
-  };
-
-  next();
-});
-
 app.use(bodyParser.json());
 app.use(logger);
 app.use(router);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 app.listen(PORT, () => {
