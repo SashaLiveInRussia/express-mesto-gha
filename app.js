@@ -21,6 +21,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
+app.use((req, res) => {
+  res.status(404).send({ message: 'Маршрут не найден' });
+})
+
 app.use((err, req, res, next) => {
   res.status(500).send({ message: 'На сервере произошла ошибка' });
 });

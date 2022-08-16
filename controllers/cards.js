@@ -19,8 +19,11 @@ const createCard = (req, res) => {
 }; // создаёт карточку
 
 const deleteCard = (req, res) => {
-  Card.findOneAndRemove({ _id: req.params.cardId, owner: req.user.id })
+  Card.findOneAndRemove({ _id: req.params.cardId })
     .then((card) => {
+      if (card && card.owner !== req.user.id) {
+        return res.status(403).send({ message: 'Не наша карточка' });
+      }
       if (!card) {
         return res.status(ERRORS.ERROR_404).send({ message: 'Карточка с указанным id не найдена' });
       }
