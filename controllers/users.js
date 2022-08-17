@@ -30,14 +30,6 @@ const getUser = (req, res) => {
 const createUser = (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(ERRORS.ERROR_400).send({ message: 'Email или пароль не передан' });
-  }
-
-  if (!validator.isEmail(email)) {
-    return res.status(ERRORS.ERROR_400).send({ message: 'Email некорректен' });
-  }
-
   return User.findOne({ email })
     .then((user) => {
       if (user) {
@@ -91,14 +83,6 @@ const updateUserAvatar = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(ERRORS.ERROR_400).send({ message: 'Email или пароль не передан' });
-  }
-
-  if (!validator.isEmail(email)) {
-    return res.status(ERRORS.ERROR_400).send({ message: 'Email некорректен' });
-  }
 
   return User.findOne({ email }).select('+password')
     .then((user) => {
