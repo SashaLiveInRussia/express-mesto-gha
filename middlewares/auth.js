@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const AuthError = require('../errors/AuthError');
 
 const JWT_SECRET = 'secret-key';
 
@@ -8,7 +9,7 @@ const isAutorised = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    return next(new AuthError('Необходима авторизация'));
   }
 
   let payload;
@@ -16,7 +17,7 @@ const isAutorised = (req, res, next) => {
   try {
     payload = jwt.verify(authorization.replace('Bearer ', '').trim(), JWT_SECRET);
   } catch (err) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    return next(new AuthError('Необходима авторизация'));
   }
 
   req.user = payload;

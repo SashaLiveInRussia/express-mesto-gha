@@ -1,9 +1,6 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "no-useless-escape": [
-      "allow"
-    ],
     "no-underscore-dangle": [
       "error",
       {

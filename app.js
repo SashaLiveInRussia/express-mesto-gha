@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const router = require('./routes');
 const { errors } = require('celebrate');
+const router = require('./routes');
+const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -21,14 +22,20 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Маршрут не найден' });
-})
+app.use((req, res, next) => {
+  next(new NotFoundError('Маршрут не найден'));
+});
 
 app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  if (err.name === 'ValidationError') {
+    return res.status(404).send({ message: 'Переданы некорректные данные' }); // Добавлено здесь потому что дублируется везде
+  }
+
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
+
+  res.status(statusCode).send({ message });
+  return next();
 });
 
-app.listen(PORT, () => {
-  console.log('Сервер запущен');
-});
+app.listen(PORT, () => {});
