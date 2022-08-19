@@ -8,10 +8,6 @@ const NotFoundError = require('./errors/NotFoundError');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-const logger = (req, res, next) => {
-  next();
-};
-
 app.use(bodyParser.json());
 app.use(logger);
 app.use(router);
