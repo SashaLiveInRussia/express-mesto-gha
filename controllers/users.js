@@ -6,6 +6,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const AuthError = require('../errors/AuthError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const ConflictError = require('../errors/ConflictError');
 
 const getUsers = (req, res, next) => User.find({})
   .then((users) => res.status(200).send(users))
@@ -31,7 +32,7 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ForbiddenError('Такая запись уже существует'));
+        return next(new ConflictError('Такая запись уже существует'));
       }
 
       return next(err);
@@ -60,7 +61,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findOne({ email }).select('+password')
-    .orFail(() => next(new NotFoundError('Такого пользователя не существует')))
+    .orFail(() => next(new AuthError('Такого пользователя не существует')))
     .then((user) => bcrypt.compare(password, user.password, (err, isValidPassword) => {
       if (!isValidPassword) {
         return next(new AuthError('Неправильный email или пароль'));
