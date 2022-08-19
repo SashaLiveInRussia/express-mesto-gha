@@ -5,7 +5,6 @@ const { getJwtToken } = require('../middlewares/auth');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const AuthError = require('../errors/AuthError');
-const ForbiddenError = require('../errors/ForbiddenError');
 const ConflictError = require('../errors/ConflictError');
 
 const getUsers = (req, res, next) => User.find({})
