@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AuthError = require('../errors/AuthError');
 
-console.log(process.env);
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = 'secret-key';
 
 const getJwtToken = (id) => jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' });
 
