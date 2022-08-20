@@ -1,0 +1,16 @@
+.header__block-login_active {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10;
+	max-height: 142px;
+	transition: all 1s ease;
+	padding-top: 40px;
+	margin: 0 auto 40px;
+}
+
+@media screen and (min-width: 600px) {
+	.header__block-login_active {
+		display: none;
+	}
+}

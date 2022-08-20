@@ -1,0 +1,15 @@
+.profile__name-and-edit {
+  display: flex;
+  align-items: baseline;
+  margin: 0px 18px 16px 0px;
+  position: relative;
+  padding: 0 18px 3px 0;
+}
+
+@media screen and (min-width: 320px) and (max-width: 800px) {
+  .profile__name-and-edit {
+    max-width: 280px;
+    margin: 22px 0px 14px 0px;
+    padding: 0px 10px 3px;
+  }
+}

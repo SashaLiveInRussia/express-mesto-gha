@@ -1,0 +1,15 @@
+.header__login_hide {
+	margin-left: 24px;
+}
+
+.header__login_hide:hover {
+	opacity: 0.6;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+@media screen and (min-width: 320px) and (max-width: 600px) {
+	.header__login_hide {
+		display: none;
+	}
+}

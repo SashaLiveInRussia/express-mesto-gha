@@ -1,0 +1,14 @@
+.sign-up__field {
+	height: 14px;
+	width: 358px;
+	margin-top: 30px;
+	outline: none;
+	background-color: transparent;
+	border: none;
+	border-bottom: 2px solid #cccccc;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	padding: 13px 0;
+	color: #cccccc;
+}

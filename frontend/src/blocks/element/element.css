@@ -1,0 +1,15 @@
+.element {
+  display: flex;
+  flex-direction: column;
+  max-width: 282px;
+  border-radius: 10px;
+  overflow: hidden;
+  object-fit: cover;
+  position: relative;
+}
+
+@media screen and (min-width: 320px) and (max-width: 917px) {
+  .element {
+    margin: 0 auto;
+  }
+}

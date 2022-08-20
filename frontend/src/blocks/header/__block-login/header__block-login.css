@@ -1,0 +1,8 @@
+.header__block-login {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	max-height: 0;
+	z-index: -10;
+	transition: all 1s ease;
+}

@@ -1,0 +1,13 @@
+.profile__edit-avatar {
+	margin-right: 30px;
+	position: relative;
+	cursor: pointer;
+}
+
+.profile__edit-avatar:hover .profile__pencil {
+	opacity: 1;
+}
+
+.profile__edit-avatar:hover .profile__avatar {
+	opacity: 0.2;
+}

@@ -1,0 +1,25 @@
+.header__login {
+	display: flex;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	color: #ffffff;
+	margin: auto;
+}
+
+.header__login:hover {
+	opacity: 0.6;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+.header__login:not(:first-child) {
+	padding-top: 18px;
+}
+
+@media screen and (min-width: 320px) and (max-width: 600px) {
+	.header__login {
+		flex-direction: column;
+		padding: 0px;
+	}
+}
