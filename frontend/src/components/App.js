@@ -36,6 +36,7 @@ function App() {
 			.then((data) => {
 				if (data.token) {
 					localStorage.setItem('jwt', data.token);
+					api.setHeaders({authorization: data.token});
 					tokenCheck();
 				}
 			})
@@ -58,10 +59,10 @@ function App() {
 			return Auth.getContent(jwt).then((res) => {
 				if (res) {
 					const userData = {
-						email: res.data.email
+						email: res.email
 					}
-					setUserData(userData);
 
+					setUserData(userData);
 					return userData;
 				}
 			}).catch(console.error);
@@ -141,7 +142,7 @@ function App() {
 	function handleUpdateUser(user) {
 		api.editProfile(user)
 			.then(userInfo => {
-				setCurrentUser(userInfo);
+				setCurrentUser(userInfo.data);
 				closeAllPopups();
 			})
 			.catch(console.error);
@@ -150,7 +151,7 @@ function App() {
 	function handleUpdateAvatar(userAvatar) {
 		api.changeAvatar(userAvatar)
 			.then(userInfo => {
-				setCurrentUser(userInfo);
+				setCurrentUser(userInfo.data);
 				closeAllPopups();
 			})
 			.catch(console.error);
@@ -158,11 +159,11 @@ function App() {
 
 	function handleCardLike(card) {
 		// Снова проверяем, есть ли уже лайк на этой карточке
-		const isLiked = card.likes.some(i => i._id === currentUser._id);
+		const isLiked = card.likes.some(i => i === currentUser._id);
 
 		// Отправляем запрос в API и получаем обновлённые данные карточки
 		api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-			setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+			setCards((state) => state.map((c) => c._id === card._id ? newCard.data : c));
 		}).catch(console.error);
 	}
 
@@ -178,7 +179,7 @@ function App() {
 	function handleAddPlaceSubmit(card) {
 		api.addCard(card)
 			.then(newCard => {
-				setCards([newCard, ...cards]);
+				setCards([newCard.data, ...cards]);
 				closeAllPopups();
 			})
 			.catch(console.error)

@@ -4,6 +4,10 @@ export class Api {
 		this._headers = options.headers;
 	}
 
+	setHeaders(value = {}) {
+		this._headers = {...this._headers, ...value}
+	}
+
 	_checkResponse(res) {
 		if (res.ok) {
 			return res.json();
@@ -86,6 +90,7 @@ export class Api {
 const api = new Api({
 	baseUrl: 'https://api.sasha.nomoredomains.sbs',
 	headers: {
+		authorization: localStorage.getItem('jwt'),
 		// authorization: 'adaf3729-939a-4351-9992-562ebfc14bb0',
 		'Content-Type': 'application/json'
 	}
