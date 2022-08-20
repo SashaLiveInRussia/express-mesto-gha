@@ -1,6 +1,6 @@
 
 
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'https://api.sasha.nomoredomains.sbs';
 
 const checkResponse = (res) => {
   if (res.ok) {
