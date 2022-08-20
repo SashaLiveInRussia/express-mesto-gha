@@ -80,6 +80,7 @@ app.use((err, req, res, next) => {
 });
 
 
+console.log(process.env);
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => { });
 } else {
