@@ -3,6 +3,8 @@
 
 
 https://github.com/SashaLiveInRussia/express-mesto-gha
+https://sasha.nomoredomains.sbs
+51.250.29.126
 
 
 ## Настройка бейджей статуса тестов
