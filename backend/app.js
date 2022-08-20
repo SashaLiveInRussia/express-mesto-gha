@@ -14,7 +14,7 @@ const { PORT = 3000 } = process.env;
 const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
-  'localhost:3000',
+  'http://localhost:3000',
   'http://sasha.nomoredomains.sbs',
   'https://sasha.nomoredomains.sbs',
 ];
