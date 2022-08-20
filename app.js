@@ -9,7 +9,6 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.json());
-app.use(logger);
 app.use(router);
 app.use(errors());
 
